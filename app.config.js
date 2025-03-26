@@ -8,5 +8,8 @@ export default {
         projectId: "a6dad378-d3d9-4eae-8c98-bc29dc4e8569",
       },
     },
+    android: {
+      package: "com.apisit.mymobile", // ✅ ไม่มีเครื่องหมาย '-'
+    },
   },
 };

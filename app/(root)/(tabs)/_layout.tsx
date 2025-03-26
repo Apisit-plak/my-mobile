@@ -1,12 +1,20 @@
 import { router, Tabs } from "expo-router";
 import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Badge } from "react-native-paper"; // หากคุณใช้ react-native-paper
 
-const TabIcon = ({ name, focused }: { name: string; focused: boolean }) => (
+const TabIcon = ({ name, focused, unreadCount }: { name: string; focused: boolean; unreadCount?: number }) => (
+  <View style={styles.iconContainer}>
     <Ionicons name={name} size={30} color={focused ? "#4CAF50" : "#B0BEC5"} />
+    {unreadCount > 0 && (
+      <Badge style={styles.badge}>{unreadCount}</Badge> // แสดงตัวเลขการแจ้งเตือนที่ยังไม่ได้อ่าน
+    )}
+  </View>
 );
 
 export default function Layout() {
+  const unreadCount = 99; // ตัวอย่างจำนวนการแจ้งเตือนที่ยังไม่ได้อ่าน (สามารถดึงจาก API หรือ state)
+
   return (
     <Tabs
       initialRouteName="home"
@@ -38,7 +46,11 @@ export default function Layout() {
           title: "แจ้งเตือน",
           headerShown: true,
           tabBarIcon: ({ focused }) => (
-            <TabIcon name={focused ? "notifications" : "notifications-outline"} focused={focused} />
+            <TabIcon 
+              name={focused ? "notifications" : "notifications-outline"} 
+              focused={focused} 
+              unreadCount={unreadCount} // ส่งจำนวนการแจ้งเตือนที่ยังไม่ได้อ่าน
+            />
           ),
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -47,7 +59,6 @@ export default function Layout() {
           ),
         }}
       />
-    
 
       {/* 👤 Profile */}
       <Tabs.Screen
@@ -102,5 +113,21 @@ const styles = StyleSheet.create({
   },
   backButton: {
     paddingLeft: 20,
+  },
+  iconContainer: {
+    position: "relative",
+    width: 30,
+    height: 30,
+  },
+  badge: {
+    position: "absolute",
+    top: -4,
+    right: -4,
+    backgroundColor: "#F44336", // สีแดงสำหรับการแจ้งเตือน
+    color: "white",
+    fontSize: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 12,
   },
 });
